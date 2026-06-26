@@ -445,67 +445,92 @@ footer{border-top:1px solid var(--line);padding:30px 0 70px;margin-top:60px}
 .theme-toggle svg{pointer-events:none}
 
 /* ============================================================
-   LIGHT MODE OVERRIDES
+   LIGHT MODE — dark cards on light page (Vercel/Linear pattern)
+   Page shell goes light; terminals & cards stay dark and pop.
+   CSS variable cascading restores neon colors inside dark panels.
    ============================================================ */
 body.light{
-  --bg:#f4f6fb; --bg-2:#eaecf5; --panel:#e2e6f2; --panel-2:#d8dded;
-  --line:#c0c8db; --line-2:#aab4cc;
-  --txt:#0d1421; --txt-dim:#374560; --txt-faint:#7080a0;
-  --glow-green:0 0 0 1px rgba(16,160,90,.3),0 0 18px -6px rgba(16,160,90,.35);
-  --glow-cyan:0 0 0 1px rgba(0,160,200,.3),0 0 18px -6px rgba(0,160,200,.35);
+  /* Page shell tokens */
+  --bg:#f1f5f9; --bg-2:#e8edf5;
+  /* Buttons / chips / pills that live ON the page (not in panels) */
+  --panel:#ffffff; --panel-2:#f0f4fa;
+  --line:#dde3ed; --line-2:#c7d0e0;
+  /* Text on light background */
+  --txt:#0f172a; --txt-dim:#334155; --txt-faint:#64748b;
+  /* Darker accents that read on white */
+  --green:#059669; --cyan:#0284c7; --amber:#d97706; --violet:#7c3aed;
+  --glow-green:0 0 0 1px rgba(5,150,105,.3),0 0 14px -4px rgba(5,150,105,.25);
+  --glow-cyan:0 0 0 1px rgba(2,132,199,.3),0 0 14px -4px rgba(2,132,199,.25);
 }
-body.light ::-webkit-scrollbar-track{background:var(--bg-2)}
-body.light ::-webkit-scrollbar-thumb{background:var(--line-2)}
-body.light ::selection{background:rgba(57,214,255,.22);color:#0d1421}
 
-/* WebGL scene — keep faint in light mode */
-body.light #webgl{opacity:.07}
-body.light .fx-overlay{background:radial-gradient(120% 90% at 50% 8%,rgba(244,246,251,.55) 40%,rgba(244,246,251,.88) 78%,rgba(244,246,251,.97) 100%)}
-body.light .fx-scan{opacity:.015}
-body.light .fx-grain{opacity:.03}
+/* Completely hide WebGL — solid light fill behind content */
+body.light #webgl{opacity:0}
+body.light .fx-overlay{background:#f1f5f9}
+body.light .fx-scan{opacity:0}
+body.light .fx-grain{opacity:0}
 
-/* HUD */
-body.light .hud{background:linear-gradient(180deg,rgba(244,246,251,.97),rgba(244,246,251,.85));border-bottom-color:var(--line)}
+body.light ::-webkit-scrollbar-track{background:#e8edf5}
+body.light ::-webkit-scrollbar-thumb{background:#c7d0e0}
+body.light ::selection{background:rgba(2,132,199,.2);color:#0f172a}
 
-/* Panels with hardcoded dark backgrounds */
-body.light .term{background:linear-gradient(180deg,rgba(226,230,242,.97),rgba(216,221,237,.95));box-shadow:0 40px 90px -40px rgba(0,0,0,.12)}
-body.light .term-bar{background:rgba(0,0,0,.06)}
-body.light .cmd-row{background:rgba(0,0,0,.04)}
-body.light .term-in{background:rgba(0,0,0,.04)}
-body.light .term-in input{color:var(--txt)}
-body.light .boot{background:linear-gradient(180deg,rgba(226,230,242,.95),rgba(216,221,237,.9))}
-body.light .boot-bar{background:rgba(0,0,0,.06)}
-body.light .bb .track{background:var(--line)}
-body.light .chip{background:var(--panel-2);border-color:var(--line-2)}
-body.light .chip:hover{background:rgba(62,240,163,.08)}
-body.light .stat-card{background:linear-gradient(180deg,rgba(226,230,242,.85),rgba(216,221,237,.75))}
-body.light .stat-card .sc-ic{background:var(--panel)}
-body.light .about-status .pillx{background:var(--panel)}
-body.light .abx{background:linear-gradient(180deg,rgba(226,230,242,.9),rgba(216,221,237,.85))}
-body.light .mlist li{background:var(--panel);border-color:var(--line)}
-body.light .mlist li:hover{background:var(--panel-2)}
-body.light .marquee-strip{background:rgba(234,236,245,.88)}
-body.light .marquee-strip:before{background:linear-gradient(90deg,var(--bg) 25%,transparent)}
-body.light .marquee-strip:after{background:linear-gradient(270deg,var(--bg) 25%,transparent)}
-body.light .card{background:linear-gradient(180deg,rgba(226,230,242,.95),rgba(216,221,237,.9))}
-body.light .exp{background:linear-gradient(180deg,rgba(226,230,242,.85),rgba(216,221,237,.75))}
-body.light .sgroup{background:linear-gradient(180deg,rgba(226,230,242,.85),rgba(216,221,237,.75))}
-body.light .sgroup .gh .ico{background:var(--panel)}
-body.light .sgroup .tags span{background:var(--panel);border-color:var(--line)}
-body.light .edu{background:linear-gradient(180deg,rgba(226,230,242,.85),rgba(216,221,237,.75))}
-body.light .cert{background:linear-gradient(180deg,rgba(226,230,242,.85),rgba(216,221,237,.75))}
-body.light .cert .ico{background:var(--panel)}
-body.light .proj{background:linear-gradient(180deg,rgba(226,230,242,.9),rgba(216,221,237,.85))}
-body.light .proj .stack span{background:var(--panel);border-color:var(--line)}
-body.light .ct-wrap{background:linear-gradient(180deg,rgba(226,230,242,.95),rgba(216,221,237,.9))}
-body.light .ct-r{background:rgba(0,0,0,.04)}
-body.light .clink{background:var(--panel)}
-body.light .clink .ico{background:var(--panel-2)}
-body.light .deploy{background:var(--panel)}
-body.light .focus-tags span{background:var(--panel)}
-body.light .post{background:linear-gradient(180deg,rgba(226,230,242,.9),rgba(216,221,237,.85))}
-body.light .post .ptags span{background:var(--panel);border-color:var(--line)}
-body.light .feat{background:linear-gradient(125deg,rgba(226,230,242,.95),rgba(216,221,237,.88))}
-body.light .feat .fr{background:rgba(0,0,0,.04)}
-body.light .mob-nav{background:rgba(244,246,251,.98);border-left-color:var(--line-2)}
-body.light .metric .track{background:var(--line)}
+/* HUD — frosted white */
+body.light .hud{background:rgba(255,255,255,.95);border-bottom-color:#dde3ed}
+
+/* Primary button — solid gradient so text stays readable */
+body.light .btn.primary{background:linear-gradient(96deg,#059669,#0284c7);border-color:#059669;color:#fff}
+body.light .btn.primary:hover{box-shadow:0 0 0 1px rgba(5,150,105,.5),0 0 20px -4px rgba(5,150,105,.4)}
+
+/* Marquee strip */
+body.light .marquee-strip{background:rgba(240,244,250,.92);border-color:#dde3ed}
+body.light .marquee-strip:before{background:linear-gradient(90deg,#f1f5f9 25%,transparent)}
+body.light .marquee-strip:after{background:linear-gradient(270deg,#f1f5f9 25%,transparent)}
+
+/* Footer */
+body.light footer{border-top-color:#dde3ed}
+
+/* ── DARK PANELS: restore original dark bg + full neon palette ──
+   By setting variables on the panel itself every child inherits
+   them — no need to override individual text/icon elements.     */
+body.light .term,
+body.light .boot,
+body.light .card,
+body.light .stat-card,
+body.light .exp,
+body.light .proj,
+body.light .sgroup,
+body.light .edu,
+body.light .cert,
+body.light .ct-wrap,
+body.light .feat,
+body.light .post,
+body.light .clink,
+body.light .abx,
+body.light .deploy,
+body.light .mob-nav,
+body.light .stile{
+  --green:#3ef0a3; --cyan:#39d6ff; --amber:#ffc24b; --violet:#9a8cff;
+  --txt:#e7eefc; --txt-dim:#9fb0cc; --txt-faint:#5e7197;
+  --line:#1a2740; --line-2:#243756;
+  --panel:#0b111e; --panel-2:#0e1626;
+  --glow-green:0 0 0 1px rgba(62,240,163,.25),0 0 24px -6px rgba(62,240,163,.55);
+  --glow-cyan:0 0 0 1px rgba(57,214,255,.25),0 0 24px -6px rgba(57,214,255,.55);
+}
+
+/* Lift dark panels off the light page with shadows */
+body.light .term{box-shadow:0 8px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.12)}
+body.light .boot{box-shadow:0 8px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.12)}
+body.light .card{box-shadow:0 8px 40px rgba(0,0,0,.2),0 2px 8px rgba(0,0,0,.1)}
+body.light .stat-card{box-shadow:0 4px 20px rgba(0,0,0,.18)}
+body.light .exp{box-shadow:0 4px 20px rgba(0,0,0,.16)}
+body.light .proj{box-shadow:0 8px 28px rgba(0,0,0,.18)}
+body.light .sgroup{box-shadow:0 4px 20px rgba(0,0,0,.16)}
+body.light .edu{box-shadow:0 4px 20px rgba(0,0,0,.16)}
+body.light .cert{box-shadow:0 4px 20px rgba(0,0,0,.16)}
+body.light .feat{box-shadow:0 8px 36px rgba(0,0,0,.2)}
+body.light .post{box-shadow:0 4px 20px rgba(0,0,0,.16)}
+body.light .ct-wrap{box-shadow:0 10px 48px rgba(0,0,0,.22)}
+body.light .abx{box-shadow:0 4px 16px rgba(0,0,0,.14)}
+
+/* Mobile nav stays dark */
+body.light .mob-nav{background:rgba(5,7,13,.97);border-left-color:#243756}
+body.light .mob-nav-backdrop{background:rgba(0,0,0,.4)}
