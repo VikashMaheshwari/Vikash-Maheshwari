@@ -9,7 +9,7 @@ export default function Projects() {
         <div className="shead reveal">
           <span className="idx">02</span>
           <h1>Project Registry</h1>
-          <div className="sub">{PROJECTS.length} systems shipped · agents · RAG · ML · vision</div>
+          <div className="sub">{PROJECTS.length} systems shipped · harness · agents · RAG · ML · vision</div>
           <div className="rule"></div>
         </div>
         <div className="proj-grid" id="projGrid">

@@ -20,8 +20,8 @@ export default function About() {
               What sets me apart is how quickly I get to depth. I hold a{' '}
               <b>Master of Engineering in Computer Science &amp; Engineering from the University of Connecticut</b>{' '}
               (Class of 2026), and alongside it I've built the full ML/AI stack end to end — from classical machine learning
-              and deep learning through to LLM fine-tuning, multi-agent pipelines, RAG systems, and MCP-based tool
-              orchestration, with evaluation, guardrails, and observability throughout.
+              and deep learning through to LLM fine-tuning, multi-agent pipelines, guardrailed agent harnesses, RAG systems,
+              and MCP-based tool orchestration, with evaluation, guardrails, and observability throughout.
             </p>
             <p>
               I also bring a less common background: before AI engineering I worked as a{' '}
@@ -62,11 +62,11 @@ export default function About() {
             </div>
             <div className="abx">
               <div className="at"><span className="ico">02</span> Full ML/AI Stack</div>
-              <p>Classical ML, deep learning, LLM fine-tuning, multi-agent systems, and RAG — across the whole stack, not just one layer.</p>
+              <p>Classical ML, deep learning, LLM fine-tuning, multi-agent systems, agent harnesses, and RAG — across the whole stack, not just one layer.</p>
             </div>
             <div className="abx">
-              <div className="at"><span className="ico">03</span> Production Mindset</div>
-              <p>Evaluation, guardrails, observability and cost-aware model routing built in from the start, not bolted on later.</p>
+              <div className="at"><span className="ico">03</span> Harness-First Mindset</div>
+              <p>Guardrails, independent validators, bounded self-correction, evals, and observability built in from the start — the way MedBrief AI turns a raw LLM into a system you can trust.</p>
             </div>
             <div className="abx">
               <div className="at"><span className="ico">04</span> Cross-Domain Edge</div>

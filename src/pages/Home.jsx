@@ -163,8 +163,9 @@ export default function Home() {
               <h1><span className="l1">VIKASH </span><span className="l2">MAHESHWARI</span></h1>
               <div className="role">&gt; <span ref={roleRef}></span><span className="cur"></span></div>
               <p className="prop">
-                Building multi-agent AI systems, RAG pipelines, and MCP-based tool orchestration
-                through context engineering, agent harness engineering, and agent loop engineering.
+                Building machine learning models, guardrailed agent harnesses, RAG pipelines, and
+                MCP-based tool orchestration — with validators, self-correcting loops, and evals
+                that make LLM output trustworthy.
               </p>
               <div className="avail">
                 <span className="bd"></span> Available now · Open to AI / ML Engineer roles · Relocate anywhere in US
@@ -267,7 +268,7 @@ export default function Home() {
                     {[
                       { cls: 'g', l: 'ML & deep learning', v: 'expert', w: 94 },
                       { cls: 'c', l: 'RAG & vector retrieval', v: 'expert', w: 90 },
-                      { cls: 'v', l: 'LLM agents & orchestration', v: 'strong', w: 88 },
+                      { cls: 'v', l: 'Agents, harnesses & orchestration', v: 'strong', w: 88 },
                       { cls: 'a', l: 'Time-series & forecasting', v: 'strong', w: 86 },
                     ].map(m => (
                       <div key={m.l} className={`metric ${m.cls}`}>
