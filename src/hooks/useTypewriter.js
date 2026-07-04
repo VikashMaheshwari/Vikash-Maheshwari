@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 const PHRASES = [
   'machine learning models',
+  'agent harnesses & guardrails',
   'RAG pipelines',
   'multi-agent AI systems',
   'deep learning solutions',

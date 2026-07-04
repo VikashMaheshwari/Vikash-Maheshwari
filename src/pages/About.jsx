@@ -33,7 +33,10 @@ export default function About() {
             </p>
             <p>
               I optimize for measurable impact — like training an LSTM that beat XGBoost, SARIMA, and Prophet at 4.49%
-              error, and replacing a manual research workflow with a 4-agent pipeline that cut time by ~80%. I'm{' '}
+              error, and replacing a manual research workflow with a 4-agent pipeline that cut time by ~80%. Most
+              recently I built <b>MedBrief AI</b> — a patient-briefing agent wrapped in a full harness: input/output
+              guardrails, an independent validator that never trusts the agent, a bounded self-correction loop, and
+              briefings graded A–F against ground truth. I'm{' '}
               <b>Anthropic AI Fluency</b> and <b>DataCamp AI Engineer</b> certified, and I'm looking for a full-time{' '}
               <b>AI / ML Engineer</b> role — open to relocating anywhere in the US.
             </p>

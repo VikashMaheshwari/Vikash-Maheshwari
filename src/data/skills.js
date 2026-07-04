@@ -9,7 +9,7 @@ export const SKILLS = [
   },
   {
     t: 'LLM & Agent Frameworks', ic: '⛓',
-    tags: ['LangChain', 'LangGraph', 'Hugging Face Transformers', 'MCP', 'Multi-agent orchestration', 'ReAct agents', 'Tool / function calling', 'Prompt engineering']
+    tags: ['LangChain', 'LangGraph', 'Hugging Face Transformers', 'MCP', 'Agent harness engineering', 'Multi-agent orchestration', 'ReAct agents', 'Tool / function calling', 'Self-correction loops', 'Prompt engineering']
   },
   {
     t: 'RAG & Vector Search', ic: '◈',
@@ -17,10 +17,10 @@ export const SKILLS = [
   },
   {
     t: 'LLMOps & Deployment', ic: '⬢',
-    tags: ['LangSmith', 'Langfuse', 'LLM fine-tuning (SFT)', 'Streamlit', 'Guardrails', 'Model routing', 'Streaming', 'Cost optimization']
+    tags: ['LangSmith', 'Langfuse', 'LLM fine-tuning (SFT)', 'Streamlit', 'Guardrails', 'Evals & ground truth', 'Model routing', 'Streaming', 'Request logging & metrics', 'Cost optimization']
   },
   {
     t: 'Analytics, BI & Data Viz', ic: '▤',
-    tags: ['Power BI', 'Tableau', 'Matplotlib', 'Seaborn', 'Excel', 'Data visualization', 'React.js', 'React Router']
+    tags: ['Power BI', 'Tableau', 'Matplotlib', 'Seaborn', 'Excel', 'Data visualization', 'React.js', 'Next.js', 'React Router']
   }
 ]

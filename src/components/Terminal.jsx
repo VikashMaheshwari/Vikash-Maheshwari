@@ -19,10 +19,10 @@ function buildCommands() {
     about: () => `<h4>whoami · about <span class="tag">profile</span></h4>
       <p style="color:var(--txt-dim);font-size:13px;line-height:1.7;margin-bottom:10px">
         AI / ML Engineer who <b style="color:var(--txt)">learns fast and goes deep</b> — classical ML, deep learning, LLM fine-tuning,
-        multi-agent pipelines, and production RAG. M.Eng in CS &amp; Engineering from UConn (2026).
+        multi-agent pipelines, agent harnesses, and production RAG. M.Eng in CS &amp; Engineering from UConn (2026).
       </p>
       <div class="kv">
-        <dt>edge</dt><dd>full ML/AI stack · ships to production</dd>
+        <dt>edge</dt><dd>full ML/AI stack · harness engineering · ships to production</dd>
         <dt>seeking</dt><dd>full-time AI / ML Engineer roles</dd>
         <dt>location</dt><dd>Hartford, CT · open to relocate (US)</dd>
         <dt>certified</dt><dd>Anthropic AI Fluency · DataCamp AI Engineer</dd>
@@ -81,7 +81,7 @@ function buildCommands() {
     whoami: () => `<h4>whoami <span class="tag">identity</span></h4><div class="kv">
       <dt>name</dt><dd>Vikash Kumar Maheshwari</dd>
       <dt>role</dt><dd>AI / ML Engineer</dd>
-      <dt>tagline</dt><dd>machine learning · LLM pipelines · multi-agent AI</dd>
+      <dt>tagline</dt><dd>machine learning · agent harnesses · multi-agent AI</dd>
     </div>`
   }
 }

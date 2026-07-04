@@ -18,7 +18,7 @@ export default function Contact() {
                 Available for <span>AI / ML</span> engineering roles &amp; collaborations.
               </h3>
               <p>
-                I build machine learning models, LLM pipelines, multi-agent systems, and production RAG —
+                I build machine learning models, guardrailed agent harnesses, multi-agent systems, and production RAG —
                 open to full-time roles anywhere in the US.
               </p>
               <div className="ct-links">

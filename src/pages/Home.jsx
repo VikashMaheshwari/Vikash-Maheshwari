@@ -11,9 +11,10 @@ const MARQUEE_ITEMS = [
   { label: 'FAISS', cls: 'cy' }, { label: 'Pinecone' }, { label: 'LSTM', cls: 'gn' },
   { label: 'XGBoost' }, { label: 'SARIMA', cls: 'cy' }, { label: 'Prophet' },
   { label: 'VGG-16', cls: 'gn' }, { label: 'HMM · GMM' }, { label: 'RAG Pipelines', cls: 'cy' },
-  { label: 'MCP' }, { label: 'LangSmith', cls: 'gn' }, { label: 'Docker' },
+  { label: 'MCP' }, { label: 'ChromaDB', cls: 'cy' }, { label: 'Guardrails', cls: 'gn' },
+  { label: 'LangSmith' }, { label: 'Docker' },
   { label: 'AWS', cls: 'cy' }, { label: 'FastAPI' }, { label: 'Streamlit', cls: 'gn' },
-  { label: 'Matplotlib' }, { label: 'Power BI', cls: 'cy' }, { label: 'React.js' },
+  { label: 'Matplotlib' }, { label: 'Power BI', cls: 'cy' }, { label: 'React.js' }, { label: 'Next.js', cls: 'gn' },
 ]
 
 function MarqueeRow({ ariaHidden }) {
@@ -30,7 +31,7 @@ function MarqueeRow({ ariaHidden }) {
 }
 
 const STAT_CARDS = [
-  { cls: 'c-g', target: 8, dec: 0, suffix: '', prefix: '', label: 'Shipped Projects', icon: <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> },
+  { cls: 'c-g', target: 9, dec: 0, suffix: '', prefix: '', label: 'Shipped Projects', icon: <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> },
   { cls: 'c-c', target: 80, dec: 0, suffix: '%', prefix: '~', label: 'Research Time Cut', icon: <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> },
   { cls: 'c-a', target: 1098, dec: 0, suffix: '', prefix: '', label: 'Q&A Pairs Curated', icon: <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg> },
   { cls: 'c-v', target: 4.49, dec: 2, suffix: '%', prefix: '', label: 'Forecast Error', icon: <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> },
@@ -91,7 +92,8 @@ const BOOT_LINES = [
   { prefix: '✓', cls: 'ok', content: <>loaded identity → <span className="cy">Vikash Kumar Maheshwari</span></> },
   { prefix: '✓', cls: 'ok', content: <>mounted <span className="cy">PyTorch · Scikit-learn · LangChain</span></> },
   { prefix: '✓', cls: 'ok', content: <>connected vector stores <span className="dim">(FAISS · Pinecone · Chroma)</span></> },
-  { prefix: '✓', cls: 'ok', content: <>loaded <span className="cy">8 models</span> · trained &amp; evaluated</> },
+  { prefix: '✓', cls: 'ok', content: <>loaded <span className="cy">9 systems</span> · shipped &amp; evaluated</> },
+  { prefix: '✓', cls: 'ok', content: <>harness online <span className="dim">(guardrails · validator · self-correction)</span></> },
   { prefix: '!', cls: 'wn', content: <span className="dim">observability → LangSmith / Langfuse</span> },
   { prefix: '✓', cls: 'ok', content: <>portfolio ready. type <span className="cy">help</span> below ↓</> },
 ]
@@ -233,6 +235,7 @@ export default function Home() {
                 <div className="card-b">
                   <div className="deploys">
                     {[
+                      { dot: 'g', name: 'medbrief-harness', pill: 'live', pillLabel: 'fastapi · next.js' },
                       { dot: 'g', name: 'multi-agent-research', pill: 'live', pillLabel: 'streamlit' },
                       { dot: 'g', name: 'rag-doc-search', pill: 'live', pillLabel: 'streamlit' },
                       { dot: 'c', name: 'shopping-react-agent', pill: 'demo', pillLabel: 'demo' },
@@ -251,7 +254,7 @@ export default function Home() {
                 <div className="card-h"><span className="i">◎</span> current focus</div>
                 <div className="card-b">
                   <div className="focus-tags">
-                    {['ML & deep learning', 'LLM fine-tuning', 'RAG pipelines', 'multi-agent AI', 'LLMOps & eval'].map(f => (
+                    {['agent harness engineering', 'ML & deep learning', 'LLM fine-tuning', 'RAG pipelines', 'multi-agent AI', 'LLMOps & eval'].map(f => (
                       <span key={f}><span className="b">›</span> {f}</span>
                     ))}
                   </div>

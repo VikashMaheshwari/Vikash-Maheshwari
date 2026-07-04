@@ -45,6 +45,24 @@ function FeatCard({ badges, title, excerpt, metaRows, fullContent, projectLink }
 
 const FALLBACK_POSTS = [
   {
+    badges: [{ cls: 'log', label: 'ENGINEERING LOG' }, { cls: 'cy', label: 'HARNESS' }],
+    title: 'Agent = Model + Harness: Guardrailing an LLM for Patient Briefings',
+    excerpt: 'What it takes to trust an LLM with a medical record: input/output guardrails, a validator that never trusts the agent, a bounded self-correction loop, RAG over clinical guidelines, and briefings graded A–F against physician-written answer keys.',
+    metaRows: [
+      { k: 'stack', v: 'Groq Llama 3.3 · ChromaDB · FastAPI · Next.js' },
+      { k: 'result', v: 'guardrailed, self-correcting, A–F graded briefings' },
+      { k: 'surface', v: 'FastAPI API · Next.js triage UI · MCP server' },
+      { k: 'read', v: '~7 min (est.)' },
+    ],
+    fullContent: (
+      <>
+        <p>The project: an agent reads a synthetic Synthea patient record and writes a short, doctor-facing pre-visit briefing. The model (Groq Llama 3.3 70B) supplies the intelligence — the harness supplies the trust. Every briefing passes through an input gate, a rules file, a capped tool-calling loop with four clinical tools (drug interactions, abnormal vitals, RxNorm hallucination checks, age calculation), and an output gate.</p>
+        <p>Two decisions carry the safety weight. First, the completeness validator rebuilds its must-include checklist independently from the raw CSVs — it never trusts the agent&apos;s own claim of completeness. Second, every guardrail or validation failure is fed back into the prompt and the agent rewrites, bounded at three attempts so nothing can spin forever. Each mistake the agent ever made became a rule, a check, or a guardrail — never a one-off patch.</p>
+        <p>Everything is measured: briefings are scored against hand-written ground truth and graded A–F, and every request logs latency, attempts, and pass rate to a /metrics endpoint. An MCP server exposes five patient tools to any MCP client. Synthetic data only — this is a harness-engineering study, never a real clinical tool.</p>
+      </>
+    ),
+  },
+  {
     badges: [{ cls: 'log', label: 'ENGINEERING LOG' }, { cls: 'cy', label: 'AGENTS' }, { cls: 'draft', label: 'DRAFT' }],
     title: 'Designing a 4-Agent Research Pipeline: Search → Read → Write → Critique',
     excerpt: "How I replaced a manual, four-step research workflow with a fully autonomous multi-agent pipeline — and cut research-to-insight time by roughly 80%. Notes on LCEL composition, routing through Groq's Llama 3.1, grounding with Tavily, and why a dedicated Critique agent matters.",

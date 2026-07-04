@@ -1,6 +1,20 @@
 export const PROJECTS = [
   {
-    n: '01', name: 'Multi-Agent AI Research Automation', kind: 'AGENTS',
+    n: '01', name: 'MedBrief AI — Patient Briefing Agent', kind: 'HARNESS',
+    problem: "A raw LLM can't be trusted with a medical record — it drops medications, hallucinates drug names, and skips safety-critical sections.",
+    system: 'A full agent harness around Groq Llama 3.3 70B: input/output guardrails, an independent completeness validator, a bounded self-correction loop, ChromaDB RAG over clinical guidelines, ground-truth evals graded A–F, LLMOps logging, an MCP server, and persistent memory — served by a FastAPI backend with a Next.js triage-style frontend.',
+    highlights: [
+      'The validator never trusts the agent — it rebuilds its must-include checklist independently from the raw Synthea CSVs',
+      'Guardrail and validation failures are fed back and the agent rewrites — bounded at 3 attempts, so nothing spins forever',
+      '4 clinical tools (drug interactions, abnormal vitals, RxNorm hallucination check, age calc) plus a 5-tool MCP server for external agents',
+      'Every request logs latency, attempts, and eval scores to a /metrics endpoint; briefings are graded A–F against physician-written answer keys'
+    ],
+    shows: 'agent harness engineering · guardrails · self-correction loops · RAG · evals · LLMOps · MCP',
+    impact: 'guardrailed, self-correcting, A–F graded briefings',
+    stack: ['Groq Llama 3.3', 'ChromaDB', 'FastAPI', 'Next.js', 'MCP']
+  },
+  {
+    n: '02', name: 'Multi-Agent AI Research Automation', kind: 'AGENTS',
     problem: 'A manual, 4-step research process was slow, repetitive, and inconsistent from run to run.',
     system: 'A 4-agent autonomous pipeline (Search → Read → Write → Critique) with scored reports and a 5-page Streamlit UI featuring a downloadable session library.',
     highlights: [
@@ -14,7 +28,7 @@ export const PROJECTS = [
     stack: ['LangChain LCEL', 'Groq Llama 3.1', 'Tavily', 'Streamlit']
   },
   {
-    n: '02', name: 'Autonomous AI Shopping Agent', kind: 'AGENTS',
+    n: '03', name: 'Autonomous AI Shopping Agent', kind: 'AGENTS',
     problem: 'Turning a shopper request into a solid recommendation took human reasoning across many queries.',
     system: 'A LangChain ReAct agent with custom database tools and multi-model switching (Gemini, Qwen), running 5–7 step reasoning chains with structured recommendations.',
     highlights: [
@@ -28,7 +42,7 @@ export const PROJECTS = [
     stack: ['LangChain ReAct', 'Gemini', 'Qwen', 'Custom DB tools']
   },
   {
-    n: '03', name: 'RAG Based Document Search', kind: 'RAG',
+    n: '04', name: 'RAG Based Document Search', kind: 'RAG',
     problem: 'Answering questions across PDFs and web pages — with trustworthy citations — was slow and error-prone.',
     system: 'End-to-end Retrieval-Augmented Generation with document chunking, vector retrieval, and semantic search; deployed a Streamlit interface for real-time querying with source-cited responses.',
     highlights: [
@@ -42,7 +56,7 @@ export const PROJECTS = [
     stack: ['LangGraph', 'LangChain', 'Vector search', 'Streamlit']
   },
   {
-    n: '04', name: 'FOMC Q&A Extraction & LLM Fine-Tuning', kind: 'FINE-TUNE',
+    n: '05', name: 'FOMC Q&A Extraction & LLM Fine-Tuning', kind: 'FINE-TUNE',
     problem: 'No domain-specific dataset existed for Federal Reserve policy language — a true cold start.',
     system: 'A custom extraction pipeline created 1,098 Q&A pairs from 40 Fed transcripts; fine-tuned GPT-2 with supervised fine-tuning and evaluated generalization (aligned with CPT/SFT workflows).',
     highlights: [
@@ -56,7 +70,7 @@ export const PROJECTS = [
     stack: ['GPT-2', 'SFT', 'Python', 'Custom pipeline']
   },
   {
-    n: '05', name: 'U.S. Retail Sales Time-Series Forecasting', kind: 'FORECAST',
+    n: '06', name: 'U.S. Retail Sales Time-Series Forecasting', kind: 'FORECAST',
     problem: 'Long-horizon revenue planning needed a retail forecast more accurate than classical baselines.',
     system: 'An LSTM pipeline on 33 years of FRED retail data with stationarity validation and trend capture; outperformed XGBoost, SARIMA, and Prophet, delivering a 24-month forecast.',
     highlights: [
@@ -70,7 +84,7 @@ export const PROJECTS = [
     stack: ['LSTM', 'XGBoost', 'SARIMA', 'Prophet', 'FRED']
   },
   {
-    n: '06', name: 'Market Regime Detection', kind: 'MODELING',
+    n: '07', name: 'Market Regime Detection', kind: 'MODELING',
     problem: 'Spotting when the market shifts behavior needed models robust across long, noisy horizons.',
     system: 'Hidden Markov Model and Gaussian Mixture Model pipelines classified regimes across 15 years of S&P 500 data, validated through statistical testing and backtested on 2025 data.',
     highlights: [
@@ -84,7 +98,7 @@ export const PROJECTS = [
     stack: ['HMM', 'GMM', 'Statistical testing', 'Python']
   },
   {
-    n: '07', name: 'Leaf AI — Plant Disease Detection', kind: 'VISION', context: 'Indus University · Jan–May 2024',
+    n: '08', name: 'Leaf AI — Plant Disease Detection', kind: 'VISION', context: 'Indus University · Jan–May 2024',
     problem: 'Farmers needed a fast, accessible way to catch leaf diseases early in Apple, Tomato and Potato crops before they spread.',
     system: 'Built a web app to capture or upload a leaf image and get an instant diagnosis, powered by machine-learning image-classification models trained on diseased vs. healthy leaves.',
     highlights: [
@@ -98,7 +112,7 @@ export const PROJECTS = [
     stack: ['Machine Learning', 'Image Classification', 'Web App', 'Python']
   },
   {
-    n: '08', name: 'Early Ocular Disease Diagnosis', kind: 'VISION', context: 'Indus University · Jul–Nov 2023',
+    n: '09', name: 'Early Ocular Disease Diagnosis', kind: 'VISION', context: 'Indus University · Jul–Nov 2023',
     problem: 'Eye diseases are hard to catch early, delaying care — clinicians needed a model that flags disease from medical images at an early stage.',
     system: 'Led development of a VGG-16 deep-learning classifier on a curated dataset of medical imaging and patient records, with iterative data management and model optimization.',
     highlights: [
