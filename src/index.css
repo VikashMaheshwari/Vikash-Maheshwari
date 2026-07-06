@@ -294,17 +294,19 @@ section.block{position:relative;padding:clamp(70px,9vw,120px) 0}
 .cert .by{font-family:var(--mono);font-size:11.5px;color:var(--txt-faint);margin-top:2px}
 
 /* BLOG */
-#blogFallback .blog-grid{grid-template-columns:1fr;gap:14px}
 .blog-note{font-family:var(--mono);font-size:11.5px;color:var(--amber);border:1px solid rgba(255,194,75,.3);background:rgba(255,194,75,.05);padding:10px 14px;border-radius:10px;margin-bottom:26px;display:flex;gap:9px;align-items:center}
 .feat{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(125deg,rgba(13,20,34,.92),rgba(8,12,22,.86));margin-bottom:22px;position:relative}
 .feat:hover{border-color:var(--line-2);box-shadow:0 40px 90px -50px rgba(0,0,0,.9), var(--glow-cyan)}
 .feat .fgrid{display:grid;grid-template-columns:1.3fr .9fr;gap:0}
 .feat .fl{padding:clamp(22px,3.4vw,38px)}
 .feat .badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.feat h3{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.08}
+.feat h3{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.08;color:var(--txt)}
 .feat .exrpt{color:var(--txt-dim);margin-top:13px;font-size:14.5px;max-width:520px}
 .feat .fr{border-left:1px solid var(--line);background:rgba(0,0,0,.22);padding:clamp(20px,3vw,32px);font-family:var(--mono);font-size:12px;color:var(--txt-faint);display:flex;flex-direction:column;justify-content:center;gap:9px;min-height:180px}
-.feat .fr img{width:100%;height:200px;object-fit:cover;border-radius:10px;display:block}
+.feat .fr img{width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;border-radius:10px;display:block;transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.feat .fr a:hover img{transform:scale(1.03)}
+.feat h3 a{transition:color .18s}
+.feat h3 a:hover{color:var(--cyan)}
 .feat .fr .row{display:flex;gap:9px}.feat .fr .row .k{color:var(--cyan);min-width:74px}.feat .fr .row .v{color:var(--txt-dim)}
 .feat .read{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;padding:9px 16px;border-radius:8px;cursor:pointer;border:1px solid var(--line-2);background:rgba(57,214,255,.06);color:var(--cyan);transition:.18s;letter-spacing:.03em;margin-top:20px}
 .feat .read:hover{border-color:var(--cyan);box-shadow:var(--glow-cyan)}
@@ -314,8 +316,17 @@ section.block{position:relative;padding:clamp(70px,9vw,120px) 0}
 .blog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 .post{border:1px solid var(--line);border-radius:15px;background:linear-gradient(180deg,rgba(11,17,30,.86),rgba(8,12,22,.82));transition:transform .3s, border-color .3s, box-shadow .3s;display:flex;flex-direction:column;overflow:hidden}
 .post:hover{transform:translateY(-5px);border-color:var(--line-2);box-shadow:0 36px 80px -45px rgba(0,0,0,.9)}
+.post .pthumb{display:block;overflow:hidden;border-bottom:1px solid var(--line)}
+.post .pthumb img{width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;display:block;transition:transform .35s cubic-bezier(.16,1,.3,1)}
+.post:hover .pthumb img{transform:scale(1.04)}
+.post h3 a{transition:color .18s}
+.post h3 a:hover{color:var(--cyan)}
 .post .pmeta{display:flex;align-items:center;gap:10px;padding:14px 18px 0;font-family:var(--mono);font-size:11px;color:var(--txt-faint)}
 .post .pmeta .num{color:var(--green)}
+.post .pmeta .dt{margin-left:auto;white-space:nowrap}
+.post .pbody:first-child,.post .pthumb+.pbody{padding-top:16px}
+.post .pdate{font-family:var(--mono);font-size:11px;color:var(--txt-faint);margin-top:12px}
+.feat .fdate{font-family:var(--mono);font-size:12px;color:var(--txt-faint);margin-top:14px}
 .post .pbody{padding:12px 18px 16px;flex:1;display:flex;flex-direction:column}
 .post h3{font-size:17px;font-weight:600;color:var(--txt);letter-spacing:-.01em;line-height:1.2}
 .post .ex{color:var(--txt-dim);font-size:13.4px;margin-top:9px;flex:1}
@@ -435,102 +446,3 @@ footer{border-top:1px solid var(--line);padding:30px 0 70px;margin-top:60px}
 .abx:nth-child(2) .at .ico{color:var(--cyan)}
 .abx:nth-child(3) .at .ico{color:var(--amber)}
 .abx:nth-child(4) .at .ico{color:var(--violet)}
-
-/* ============================================================
-   THEME TOGGLE BUTTON
-   ============================================================ */
-.theme-toggle{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:8px;
-  border:1px solid var(--line-2);background:var(--panel-2);color:var(--txt-dim);cursor:pointer;transition:.18s;flex:none;margin-left:8px}
-.theme-toggle:hover{color:var(--amber);border-color:var(--amber);box-shadow:0 0 0 1px rgba(255,194,75,.25),0 0 14px -4px rgba(255,194,75,.4);transform:rotate(18deg)}
-.theme-toggle svg{pointer-events:none}
-
-/* ============================================================
-   LIGHT MODE — dark cards on light page (Vercel/Linear pattern)
-   Page shell goes light; terminals & cards stay dark and pop.
-   CSS variable cascading restores neon colors inside dark panels.
-   ============================================================ */
-body.light{
-  /* Page shell tokens */
-  --bg:#f1f5f9; --bg-2:#e8edf5;
-  /* Buttons / chips / pills that live ON the page (not in panels) */
-  --panel:#ffffff; --panel-2:#f0f4fa;
-  --line:#dde3ed; --line-2:#c7d0e0;
-  /* Text on light background */
-  --txt:#0f172a; --txt-dim:#334155; --txt-faint:#64748b;
-  /* Darker accents that read on white */
-  --green:#059669; --cyan:#0284c7; --amber:#d97706; --violet:#7c3aed;
-  --glow-green:0 0 0 1px rgba(5,150,105,.3),0 0 14px -4px rgba(5,150,105,.25);
-  --glow-cyan:0 0 0 1px rgba(2,132,199,.3),0 0 14px -4px rgba(2,132,199,.25);
-}
-
-/* Completely hide WebGL — solid light fill behind content */
-body.light #webgl{opacity:0}
-body.light .fx-overlay{background:#f1f5f9}
-body.light .fx-scan{opacity:0}
-body.light .fx-grain{opacity:0}
-
-body.light ::-webkit-scrollbar-track{background:#e8edf5}
-body.light ::-webkit-scrollbar-thumb{background:#c7d0e0}
-body.light ::selection{background:rgba(2,132,199,.2);color:#0f172a}
-
-/* HUD — frosted white */
-body.light .hud{background:rgba(255,255,255,.95);border-bottom-color:#dde3ed}
-
-/* Primary button — solid gradient so text stays readable */
-body.light .btn.primary{background:linear-gradient(96deg,#059669,#0284c7);border-color:#059669;color:#fff}
-body.light .btn.primary:hover{box-shadow:0 0 0 1px rgba(5,150,105,.5),0 0 20px -4px rgba(5,150,105,.4)}
-
-/* Marquee strip */
-body.light .marquee-strip{background:rgba(240,244,250,.92);border-color:#dde3ed}
-body.light .marquee-strip:before{background:linear-gradient(90deg,#f1f5f9 25%,transparent)}
-body.light .marquee-strip:after{background:linear-gradient(270deg,#f1f5f9 25%,transparent)}
-
-/* Footer */
-body.light footer{border-top-color:#dde3ed}
-
-/* ── DARK PANELS: restore original dark bg + full neon palette ──
-   By setting variables on the panel itself every child inherits
-   them — no need to override individual text/icon elements.     */
-body.light .term,
-body.light .boot,
-body.light .card,
-body.light .stat-card,
-body.light .exp,
-body.light .proj,
-body.light .sgroup,
-body.light .edu,
-body.light .cert,
-body.light .ct-wrap,
-body.light .feat,
-body.light .post,
-body.light .clink,
-body.light .abx,
-body.light .deploy,
-body.light .mob-nav,
-body.light .stile{
-  --green:#3ef0a3; --cyan:#39d6ff; --amber:#ffc24b; --violet:#9a8cff;
-  --txt:#e7eefc; --txt-dim:#9fb0cc; --txt-faint:#5e7197;
-  --line:#1a2740; --line-2:#243756;
-  --panel:#0b111e; --panel-2:#0e1626;
-  --glow-green:0 0 0 1px rgba(62,240,163,.25),0 0 24px -6px rgba(62,240,163,.55);
-  --glow-cyan:0 0 0 1px rgba(57,214,255,.25),0 0 24px -6px rgba(57,214,255,.55);
-}
-
-/* Lift dark panels off the light page with shadows */
-body.light .term{box-shadow:0 8px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.12)}
-body.light .boot{box-shadow:0 8px 40px rgba(0,0,0,.22),0 2px 8px rgba(0,0,0,.12)}
-body.light .card{box-shadow:0 8px 40px rgba(0,0,0,.2),0 2px 8px rgba(0,0,0,.1)}
-body.light .stat-card{box-shadow:0 4px 20px rgba(0,0,0,.18)}
-body.light .exp{box-shadow:0 4px 20px rgba(0,0,0,.16)}
-body.light .proj{box-shadow:0 8px 28px rgba(0,0,0,.18)}
-body.light .sgroup{box-shadow:0 4px 20px rgba(0,0,0,.16)}
-body.light .edu{box-shadow:0 4px 20px rgba(0,0,0,.16)}
-body.light .cert{box-shadow:0 4px 20px rgba(0,0,0,.16)}
-body.light .feat{box-shadow:0 8px 36px rgba(0,0,0,.2)}
-body.light .post{box-shadow:0 4px 20px rgba(0,0,0,.16)}
-body.light .ct-wrap{box-shadow:0 10px 48px rgba(0,0,0,.22)}
-body.light .abx{box-shadow:0 4px 16px rgba(0,0,0,.14)}
-
-/* Mobile nav stays dark */
-body.light .mob-nav{background:rgba(5,7,13,.97);border-left-color:#243756}
-body.light .mob-nav-backdrop{background:rgba(0,0,0,.4)}

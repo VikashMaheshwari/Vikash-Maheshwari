@@ -184,6 +184,100 @@ const FALLBACK_POSTS = [
   },
 ]
 
+const MediumIcon = (
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+    <path d="M13.54 12a4.36 4.36 0 0 1-4.36 4.35A4.36 4.36 0 0 1 4.83 12a4.36 4.36 0 0 1 4.35-4.35A4.36 4.36 0 0 1 13.54 12zm4.78 0c0 2.3-.78 4.16-1.74 4.16s-1.74-1.86-1.74-4.16.78-4.16 1.74-4.16S18.32 9.7 18.32 12zM22 12c0 2.06-.27 3.74-.61 3.74s-.61-1.68-.61-3.74.27-3.74.61-3.74S22 9.94 22 12z"/>
+  </svg>
+)
+
+function MediumFeatured({ post }) {
+  return (
+    <article className="feat reveal in">
+      <div className="fgrid">
+        <div className="fl">
+          <h3><a href={post.link} target="_blank" rel="noopener">{post.title}</a></h3>
+          <p className="exrpt">{post.excerpt}…</p>
+          {post.date && <div className="fdate">{post.date}</div>}
+          <a className="btn primary" href={post.link} target="_blank" rel="noopener" style={{ marginTop: '16px' }}>
+            {MediumIcon}
+            Read on Medium ↗
+          </a>
+        </div>
+        <div className="fr">
+          {post.thumbnail && (
+            <a href={post.link} target="_blank" rel="noopener" aria-label={post.title}>
+              <img src={post.thumbnail} alt="" loading="lazy" />
+            </a>
+          )}
+        </div>
+      </div>
+    </article>
+  )
+}
+
+function MediumCard({ post }) {
+  return (
+    <article className="post reveal in">
+      {post.thumbnail && (
+        <a className="pthumb" href={post.link} target="_blank" rel="noopener" aria-label={post.title}>
+          <img src={post.thumbnail} alt="" loading="lazy" />
+        </a>
+      )}
+      <div className="pbody">
+        <h3><a href={post.link} target="_blank" rel="noopener">{post.title}</a></h3>
+        <p className="ex">{post.excerpt.slice(0, 150)}…</p>
+        {post.date && <div className="pdate">{post.date}</div>}
+      </div>
+      <a className="read" href={post.link} target="_blank" rel="noopener">
+        <span>read on medium</span>
+        <span>↗</span>
+      </a>
+    </article>
+  )
+}
+
+function NoteCard({ badges, title, excerpt, metaRows, fullContent, projectLink, num }) {
+  const [open, setOpen] = useState(false)
+  const readTime = metaRows.find(r => r.k === 'read')?.v
+  const stack = metaRows.find(r => r.k === 'stack')?.v
+  return (
+    <article className="post reveal">
+      <div className="pmeta">
+        <span className="num">LOG {String(num).padStart(2, '0')}</span>
+        {badges.filter(b => b.label !== 'ENGINEERING LOG').map((b, i) => (
+          <span key={i} className={`kbadge ${b.cls}`}>{b.label}</span>
+        ))}
+        {readTime && <span className="dt">{readTime}</span>}
+      </div>
+      <div className="pbody">
+        <h3>{title}</h3>
+        <p className="ex">{excerpt}</p>
+        {stack && (
+          <div className="ptags">
+            {stack.split('·').map(s => <span key={s}>{s.trim()}</span>)}
+          </div>
+        )}
+      </div>
+      {fullContent && (
+        <div className={`post-full${open ? ' open' : ''}`}>
+          {fullContent}
+        </div>
+      )}
+      {projectLink ? (
+        <Link className="read" to={projectLink}>
+          <span>view full project</span>
+          <span>→</span>
+        </Link>
+      ) : fullContent ? (
+        <button className="read" aria-expanded={open} onClick={() => setOpen(o => !o)}>
+          <span>{open ? 'collapse notes' : 'read notes'}</span>
+          <span>{open ? '▲' : '▾'}</span>
+        </button>
+      ) : null}
+    </article>
+  )
+}
+
 export default function Blog() {
   useReveal()
   const { posts, status, error } = useMediumFeed()
@@ -199,43 +293,34 @@ export default function Blog() {
           <div className="rule"></div>
         </div>
 
-
-        {/* Live Medium feed */}
+        {/* Live Medium feed: featured latest post + grid of the rest */}
         {liveFeed && (
           <div id="mediumFeed">
-            {posts.map((post, i) => (
-              <article key={i} className="feat reveal in">
-                <div className="fgrid">
-                  <div className="fl">
-                    <div className="badge-row">
-                      {i === 0 && <span className="kbadge cy">FEATURED</span>}
-                      <span className="kbadge log">MEDIUM</span>
-                      {post.categories.slice(0, 2).map(c => (
-                        <span key={c} className="kbadge cy">{c}</span>
-                      ))}
-                    </div>
-                    <h3>{post.title}</h3>
-                    <p className="exrpt">{post.excerpt}…</p>
-                    <a className="btn primary" href={post.link} target="_blank" rel="noopener" style={{ marginTop: '18px' }}>
-                      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
-                        <path d="M13.54 12a4.36 4.36 0 0 1-4.36 4.35A4.36 4.36 0 0 1 4.83 12a4.36 4.36 0 0 1 4.35-4.35A4.36 4.36 0 0 1 13.54 12zm4.78 0c0 2.3-.78 4.16-1.74 4.16s-1.74-1.86-1.74-4.16.78-4.16 1.74-4.16S18.32 9.7 18.32 12zM22 12c0 2.06-.27 3.74-.61 3.74s-.61-1.68-.61-3.74.27-3.74.61-3.74S22 9.94 22 12z"/>
-                      </svg>
-                      Read on Medium ↗
-                    </a>
-                  </div>
-                  <div className="fr">
-                    {post.thumbnail && <img src={post.thumbnail} alt="" loading="lazy" />}
-                  </div>
-                </div>
-              </article>
-            ))}
+            <MediumFeatured post={posts[0]} />
+            {posts.length > 1 && (
+              <div className="blog-grid">
+                {posts.slice(1).map(post => (
+                  <MediumCard key={post.link} post={post} />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-        {/* Fallback / evergreen notes */}
+        {/* Fallback / evergreen notes — same structure */}
         {!liveFeed && (
           <div id="blogFallback">
-            {FALLBACK_POSTS.map((post, i) => <FeatCard key={i} {...post} />)}
+            {error && (
+              <div className="blog-note">
+                medium feed unreachable — showing local engineering notes
+              </div>
+            )}
+            <FeatCard {...FALLBACK_POSTS[0]} />
+            <div className="blog-grid">
+              {FALLBACK_POSTS.slice(1).map((post, i) => (
+                <NoteCard key={i} {...post} num={i + 2} />
+              ))}
+            </div>
           </div>
         )}
       </div>
