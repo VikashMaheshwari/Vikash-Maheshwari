@@ -4,8 +4,9 @@ const MEDIUM_USER = '@maheshwari.vikash6702'
 
 // Medium's RSS feed exposes only the FIRST image inside the article body,
 // not the featured image chosen in the story settings. This maps each post
-// title to its real featured image (as shown on the Medium profile cards).
-// New posts fall back to the first body image unless added here.
+// title to its real featured image for zero-latency, offline-safe display.
+// New posts don't need an entry — resolveCoverImages() below fetches the
+// real cover automatically via /api/og-image and caches it permanently.
 const FEATURED_IMAGES = {
   'The Model Is Not the Agent': '1*fY152lP-ZY5y8YQFFyXvWQ.png',
   'Long-Running & Multi-Agent Loops: Engineering for Hours, Not Seconds': '1*4YnLgnQmiKrWXOdcO8Ib6A.png',
@@ -35,6 +36,58 @@ function thumbFor(title, item) {
   const id = FEATURED_IMAGES[title]
   if (id) return miro(id)
   return toLight(item.thumbnail || firstImg(item.content || item.description))
+}
+
+// Permanent cache of resolved cover images (link -> miro URL), keyed once
+// FEATURED_IMAGES doesn't have an entry — see resolveCoverImages below.
+const THUMB_CACHE_KEY = 'mediumThumbCache_v1'
+
+function loadThumbCache() {
+  try { return JSON.parse(localStorage.getItem(THUMB_CACHE_KEY)) || {} } catch (e) { return {} }
+}
+
+function saveThumbCache(cache) {
+  try { localStorage.setItem(THUMB_CACHE_KEY, JSON.stringify(cache)) } catch (e) { /* storage full or unavailable */ }
+}
+
+const canonLink = l => (l || '').split('?')[0]
+
+async function fetchCoverImage(link) {
+  try {
+    const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null
+    const timer = setTimeout(() => { ctrl && ctrl.abort() }, 6000)
+    const r = await fetch('/api/og-image?url=' + encodeURIComponent(link), ctrl ? { signal: ctrl.signal } : undefined)
+    clearTimeout(timer)
+    if (!r.ok || !(r.headers.get('content-type') || '').includes('json')) return null
+    const d = await r.json()
+    return d.image || null
+  } catch (e) {
+    return null
+  }
+}
+
+// For posts without a hand-curated FEATURED_IMAGES entry (i.e. every new
+// post going forward), asks the /api/og-image serverless function for the
+// real Medium cover image and swaps it in once resolved, caching the result
+// so future visits skip the network round trip entirely.
+function resolveCoverImages(posts, setPosts) {
+  const cache = loadThumbCache()
+  const unresolved = posts.filter(p => !FEATURED_IMAGES[p.title] && !cache[canonLink(p.link)])
+  if (!unresolved.length) return
+
+  Promise.all(unresolved.map(p => fetchCoverImage(p.link).then(image => ({ link: p.link, image }))))
+    .then(results => {
+      const updates = {}
+      for (const { link, image } of results) {
+        if (image) updates[canonLink(link)] = image
+      }
+      if (!Object.keys(updates).length) return
+      saveThumbCache({ ...cache, ...updates })
+      setPosts(prev => prev.map(p => {
+        const image = updates[canonLink(p.link)]
+        return image ? { ...p, thumbnail: toLight(image) } : p
+      }))
+    })
 }
 
 // Medium's RSS feed only carries the 10 newest posts, so every post the
@@ -115,18 +168,23 @@ export function useMediumFeed() {
         })
         // merge: live feed first, then cached posts that fell off the feed,
         // then the static archive seed — deduped by canonical link and title
-        const canon = l => (l || '').split('?')[0]
         const seen = new Set()
         const all = []
         for (const p of [...mapped, ...loadCache(), ...ARCHIVE_POSTS]) {
-          const key = canon(p.link)
+          const key = canonLink(p.link)
           if (seen.has(key) || all.some(x => x.title === p.title)) continue
           seen.add(key)
           all.push(p)
         }
         saveCache(all)
         setStatus('● live · synced from medium · ' + all.length + ' posts')
-        setPosts(all)
+        const thumbCache = loadThumbCache()
+        const withCachedThumbs = all.map(p => {
+          const cached = !FEATURED_IMAGES[p.title] && thumbCache[canonLink(p.link)]
+          return cached ? { ...p, thumbnail: toLight(cached) } : p
+        })
+        setPosts(withCachedThumbs)
+        resolveCoverImages(withCachedThumbs, setPosts)
       })
       .catch(err => {
         clearTimeout(timer)
@@ -134,7 +192,12 @@ export function useMediumFeed() {
         const cached = loadCache()
         if (cached.length) {
           setStatus('● cached · medium unreachable · ' + cached.length + ' posts')
-          setPosts(cached)
+          const thumbCache = loadThumbCache()
+          const withCachedThumbs = cached.map(p => {
+            const c = !FEATURED_IMAGES[p.title] && thumbCache[canonLink(p.link)]
+            return c ? { ...p, thumbnail: toLight(c) } : p
+          })
+          setPosts(withCachedThumbs)
           return
         }
         setError(true)
