@@ -61,7 +61,9 @@ export default async function handler(req, res) {
   try {
     const html = await fetchHtml(parsed)
     const match = /property="og:image"\s+content="([^"]+)"/.exec(html)
-    res.setHeader('Cache-Control', 's-maxage=604800, stale-while-revalidate=86400')
+    // Only cache a successful match — caching a miss would lock in "no image"
+    // at the edge for a week even after a transient Medium block clears.
+    if (match) res.setHeader('Cache-Control', 's-maxage=604800, stale-while-revalidate=86400')
     res.status(200).json({ image: match ? match[1] : null })
   } catch {
     res.status(200).json({ image: null })

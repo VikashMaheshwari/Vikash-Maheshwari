@@ -40,6 +40,20 @@ function thumbFor(title, item, resolvedImage) {
   return toLight(item.thumbnail || firstImg(item.content || item.description))
 }
 
+// localStorage's post cache (CACHE_KEY below) can hold a thumbnail that was
+// correct when it was saved but has since been corrected in FEATURED_IMAGES —
+// that stale copy would otherwise win the merge and never self-heal, since a
+// post already showing *some* image doesn't look "missing" to resolveCoverImages.
+// This re-applies the current live/hardcoded truth on every load so a code fix
+// takes effect immediately instead of waiting on a fresh /api/og-image round trip.
+function withFreshThumb(p, thumbCache) {
+  const cached = thumbCache[canonLink(p.link)]
+  if (cached) return { ...p, thumbnail: toLight(cached.image) }
+  const id = FEATURED_IMAGES[p.title]
+  if (id) return { ...p, thumbnail: miro(id) }
+  return p
+}
+
 // Cache of resolved cover images (link -> { image, ts }). Entries older than
 // THUMB_TTL_MS are treated as stale and re-fetched from /api/og-image, so a
 // cover changed on Medium after publish gets picked up automatically instead
@@ -199,10 +213,7 @@ export function useMediumFeed() {
         }
         saveCache(all)
         setStatus('● live · synced from medium · ' + all.length + ' posts')
-        const withCachedThumbs = all.map(p => {
-          const cached = thumbCache[canonLink(p.link)]
-          return cached ? { ...p, thumbnail: toLight(cached.image) } : p
-        })
+        const withCachedThumbs = all.map(p => withFreshThumb(p, thumbCache))
         setPosts(withCachedThumbs)
         resolveCoverImages(withCachedThumbs, setPosts)
       })
@@ -213,10 +224,7 @@ export function useMediumFeed() {
         if (cached.length) {
           setStatus('● cached · medium unreachable · ' + cached.length + ' posts')
           const thumbCache = loadThumbCache()
-          const withCachedThumbs = cached.map(p => {
-            const c = thumbCache[canonLink(p.link)]
-            return c ? { ...p, thumbnail: toLight(c.image) } : p
-          })
+          const withCachedThumbs = cached.map(p => withFreshThumb(p, thumbCache))
           setPosts(withCachedThumbs)
           return
         }
