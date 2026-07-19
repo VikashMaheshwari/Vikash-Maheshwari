@@ -3,22 +3,23 @@ import { useState, useEffect } from 'react'
 const MEDIUM_USER = '@maheshwari.vikash6702'
 
 // Medium's RSS feed exposes only the FIRST image inside the article body,
-// not the featured image chosen in the story settings. This maps each post
-// title to its real featured image for zero-latency, offline-safe display.
-// New posts don't need an entry — resolveCoverImages() below fetches the
-// real cover automatically via /api/og-image and caches it permanently.
+// not the featured image chosen in the story settings. This is only the
+// immediate-paint fallback shown before the live cover resolves — the real
+// source of truth is always /api/og-image, re-checked on a TTL (see
+// THUMB_TTL_MS below) so an edited cover on Medium self-corrects here too,
+// instead of silently going stale like these hardcoded ids used to.
 const FEATURED_IMAGES = {
   'The Model Is Not the Agent': '1*fY152lP-ZY5y8YQFFyXvWQ.png',
   'Long-Running & Multi-Agent Loops: Engineering for Hours, Not Seconds': '1*4YnLgnQmiKrWXOdcO8Ib6A.png',
   'Stopping, Verifying & Self-Correction: Closing the Loop': '1*2-yFP8FBMtdQqn-DGENvCg.png',
   'The Agentic Loop: How AI Goes From Chatbot to Worker': '1*MRR-kWP74RxmYoORvt0guA.png',
-  'Sandboxing, Permissions & Trust: Harness Engineering for Safety': '1*oxKsuz8lktcEyQ4PBszVjA.png',
+  'Sandboxing, Permissions & Trust: Harness Engineering for Safety': '1*1w_4lfM8ZCA7kgNFBBfRsQ.png',
   'Designing Tools Agents Actually Use Well': '1*asr0sQqk4yJIUUVpDWxgdQ.png',
-  'What Is an Agent Harness? The Invisible Layer That Makes LLMs Useful': '1*JeTbXTs9j9BODCsep2YfQA.png',
-  'Memory, RAG & Sub-Agents: Three Ways to Beat the Context Window': '1*VcX_STlBK5w0CIeHrK_hdg.png',
-  'Context Rot: Why Your Agent Gets Dumber the Longer It Runs': '1*iYE0z2tE2_4ajCqfOlKaoQ.png',
+  'What Is an Agent Harness? The Invisible Layer That Makes LLMs Useful': '1*X-ZSX1YGFU7u8ArfqqiE6g.png',
+  'Memory, RAG & Sub-Agents: Three Ways to Beat the Context Window': '1*_ZBVfKzAkj7_5c1SF6O3Fg.png',
+  'Context Rot: Why Your Agent Gets Dumber the Longer It Runs': '1*jC_Cnl-Og-4a3JSNy7U_pw.png',
   'Context Engineering Is the New Prompt Engineering': '1*K_WZHYVV_LUHoes40ntHuQ.png',
-  'AI Explained Simply: What Is an AI Agent?': '1*wInGeNdrwki5T2GmJyjxdA.png',
+  'AI Explained Simply: What Is an AI Agent?': '1*DSpmwf8HkCSm2ku51ZhxCQ.png',
 }
 
 // miro.medium.com serves resized (and webp-converted) variants — much lighter
@@ -32,15 +33,19 @@ function toLight(url) {
   return m ? miro(m[1]) : url
 }
 
-function thumbFor(title, item) {
+function thumbFor(title, item, resolvedImage) {
+  if (resolvedImage) return toLight(resolvedImage)
   const id = FEATURED_IMAGES[title]
   if (id) return miro(id)
   return toLight(item.thumbnail || firstImg(item.content || item.description))
 }
 
-// Permanent cache of resolved cover images (link -> miro URL), keyed once
-// FEATURED_IMAGES doesn't have an entry — see resolveCoverImages below.
-const THUMB_CACHE_KEY = 'mediumThumbCache_v1'
+// Cache of resolved cover images (link -> { image, ts }). Entries older than
+// THUMB_TTL_MS are treated as stale and re-fetched from /api/og-image, so a
+// cover changed on Medium after publish gets picked up automatically instead
+// of requiring a manual edit here.
+const THUMB_CACHE_KEY = 'mediumThumbCache_v2'
+const THUMB_TTL_MS = 30 * 24 * 60 * 60 * 1000
 
 function loadThumbCache() {
   try { return JSON.parse(localStorage.getItem(THUMB_CACHE_KEY)) || {} } catch (e) { return {} }
@@ -66,26 +71,31 @@ async function fetchCoverImage(link) {
   }
 }
 
-// For posts without a hand-curated FEATURED_IMAGES entry (i.e. every new
-// post going forward), asks the /api/og-image serverless function for the
-// real Medium cover image and swaps it in once resolved, caching the result
-// so future visits skip the network round trip entirely.
+// Asks the /api/og-image serverless function for every post whose cached
+// cover is missing or older than THUMB_TTL_MS — every post, not just ones
+// without a hand-curated FEATURED_IMAGES entry, so hardcoded ids don't stay
+// stuck forever if the real cover changes on Medium later.
 function resolveCoverImages(posts, setPosts) {
   const cache = loadThumbCache()
-  const unresolved = posts.filter(p => !FEATURED_IMAGES[p.title] && !cache[canonLink(p.link)])
+  const stale = p => {
+    const c = cache[canonLink(p.link)]
+    return !c || (Date.now() - c.ts) > THUMB_TTL_MS
+  }
+  const unresolved = posts.filter(stale)
   if (!unresolved.length) return
 
   Promise.all(unresolved.map(p => fetchCoverImage(p.link).then(image => ({ link: p.link, image }))))
     .then(results => {
+      const now = Date.now()
       const updates = {}
       for (const { link, image } of results) {
-        if (image) updates[canonLink(link)] = image
+        if (image) updates[canonLink(link)] = { image, ts: now }
       }
       if (!Object.keys(updates).length) return
       saveThumbCache({ ...cache, ...updates })
       setPosts(prev => prev.map(p => {
-        const image = updates[canonLink(p.link)]
-        return image ? { ...p, thumbnail: toLight(image) } : p
+        const u = updates[canonLink(p.link)]
+        return u ? { ...p, thumbnail: toLight(u.image) } : p
       }))
     })
 }
@@ -111,7 +121,7 @@ const ARCHIVE_POSTS = [
     title: 'AI Explained Simply: What Is an AI Agent?',
     link: 'https://medium.com/@maheshwari.vikash6702/ai-explained-simply-what-is-an-ai-agent-cd3164188058',
     description: '',
-    thumbnail: 'https://miro.medium.com/v2/resize:fit:800/1*wInGeNdrwki5T2GmJyjxdA.png',
+    thumbnail: 'https://miro.medium.com/v2/resize:fit:800/1*DSpmwf8HkCSm2ku51ZhxCQ.png',
     categories: ['ai-agent', 'ai-explained'],
     date: 'Jun 19, 2026',
     excerpt: 'If you’ve spent any time around tech news lately, you’ve probably seen the words “AI agent” everywhere. People say it like you’re supposed to already know what it means',
@@ -154,13 +164,15 @@ export function useMediumFeed() {
       .then(d => {
         clearTimeout(timer)
         if (d.status !== 'ok' || !d.items || !d.items.length) throw new Error('empty feed')
+        const thumbCache = loadThumbCache()
         const mapped = d.items.map(item => {
           const title = stripT(item.title)
+          const cached = thumbCache[canonLink(item.link)]
           return {
             title,
             link: item.link,
             description: item.description || item.content || '',
-            thumbnail: thumbFor(title, item),
+            thumbnail: thumbFor(title, item, cached && cached.image),
             categories: item.categories || [],
             date: fmtDate(item.pubDate),
             excerpt: stripT(item.description || item.content).slice(0, 230)
@@ -178,10 +190,9 @@ export function useMediumFeed() {
         }
         saveCache(all)
         setStatus('● live · synced from medium · ' + all.length + ' posts')
-        const thumbCache = loadThumbCache()
         const withCachedThumbs = all.map(p => {
-          const cached = !FEATURED_IMAGES[p.title] && thumbCache[canonLink(p.link)]
-          return cached ? { ...p, thumbnail: toLight(cached) } : p
+          const cached = thumbCache[canonLink(p.link)]
+          return cached ? { ...p, thumbnail: toLight(cached.image) } : p
         })
         setPosts(withCachedThumbs)
         resolveCoverImages(withCachedThumbs, setPosts)
@@ -194,8 +205,8 @@ export function useMediumFeed() {
           setStatus('● cached · medium unreachable · ' + cached.length + ' posts')
           const thumbCache = loadThumbCache()
           const withCachedThumbs = cached.map(p => {
-            const c = !FEATURED_IMAGES[p.title] && thumbCache[canonLink(p.link)]
-            return c ? { ...p, thumbnail: toLight(c) } : p
+            const c = thumbCache[canonLink(p.link)]
+            return c ? { ...p, thumbnail: toLight(c.image) } : p
           })
           setPosts(withCachedThumbs)
           return
