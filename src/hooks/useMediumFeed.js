@@ -18,7 +18,7 @@ const FEATURED_IMAGES = {
   'What Is an Agent Harness? The Invisible Layer That Makes LLMs Useful': '1*X-ZSX1YGFU7u8ArfqqiE6g.png',
   'Memory, RAG & Sub-Agents: Three Ways to Beat the Context Window': '1*_ZBVfKzAkj7_5c1SF6O3Fg.png',
   'Context Rot: Why Your Agent Gets Dumber the Longer It Runs': '1*jC_Cnl-Og-4a3JSNy7U_pw.png',
-  'Context Engineering Is the New Prompt Engineering': '1*K_WZHYVV_LUHoes40ntHuQ.png',
+  'Context Engineering Is the New Prompt Engineering': '1*6SZ3hUsXehuTXqTw6WJ8Fw.png',
   'AI Explained Simply: What Is an AI Agent?': '1*DSpmwf8HkCSm2ku51ZhxCQ.png',
 }
 
@@ -117,6 +117,15 @@ function saveCache(posts) {
 
 // Seed for posts that had already fallen off the feed before caching existed.
 const ARCHIVE_POSTS = [
+  {
+    title: 'Context Engineering Is the New Prompt Engineering',
+    link: 'https://medium.com/@maheshwari.vikash6702/context-engineering-is-the-new-prompt-engineering-977a8ead0a11',
+    description: '',
+    thumbnail: 'https://miro.medium.com/v2/resize:fit:800/1*6SZ3hUsXehuTXqTw6WJ8Fw.png',
+    categories: ['context-engineering', 'ai-agent', 'prompt-engineering'],
+    date: 'Jun 25, 2026',
+    excerpt: 'When we started building agents — systems that run for dozens of steps, call tools, read files, and keep going until a task is done — something became obvious fast: The cleverness was never in the prompt. It was in the context.',
+  },
   {
     title: 'AI Explained Simply: What Is an AI Agent?',
     link: 'https://medium.com/@maheshwari.vikash6702/ai-explained-simply-what-is-an-ai-agent-cd3164188058',
